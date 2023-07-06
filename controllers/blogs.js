@@ -1,21 +1,31 @@
 const router = require('express').Router()
-const { Blog } = require('../models')
-
+const { Blog, User } = require('../models')
+const tokenAuthorisation = require('../utils/middleware/tokenAuthourisation')
 router.get('/', async (req,res,next)=>{
     
     try 
-    {const blogs = await Blog.findAll()
+    {const blogs = await Blog.findAll({
+        attributes:{exclude:['userId']},
+        include:{
+            model: User,
+            attributes: ['name']
+        }
+
+    })
     res.json(blogs)
     }
     catch(error)
     {
+        console.log(error)
         next(error)
     }
 })
-router.post('/',async(req,res,next)=>
+router.post('/', tokenAuthorisation, async(req,res,next)=>
   {
     try {
-        const blog = await Blog.create(req.body)
+        console.log('jgkj')
+        const user = await User.findByPk(req.decodedToken.id)
+        const blog = await Blog.create({...req.body,userId : user.id})
         res.json(blog)
     }
     catch(error)
@@ -23,17 +33,22 @@ router.post('/',async(req,res,next)=>
         next(error)
     }
   })
-  router.delete('/:id',async(req,res,next)=>
+  router.delete('/:id',tokenAuthorisation, async(req,res,next)=>
   {
     const delId = req?.params?.id
     try{
-    const blog = await Blog.destroy({
-      where: {
-        id: delId
-      }
-    });
-    res.json(blog)
-}
+        
+    const blog = await Blog.findByPk(delId);
+    if(blog.userId === req.decodedToken.id)
+    {
+        blog.destroy()
+        res.json(blog)
+    }
+    else 
+    {
+        res.json("You don't have the required permissions")
+    }
+    }
 catch(error)
 {
 next(error)

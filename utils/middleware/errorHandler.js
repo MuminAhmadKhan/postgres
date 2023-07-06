@@ -1,6 +1,6 @@
 const errorHandler = (error, request, response, next) => {
-  
-    return response.json(error?.errors)
+    
+    return response.status(400).json(error.errors)
   }
 
 module.exports = errorHandler
