@@ -22,12 +22,19 @@ class Blog extends Model {}
     likes: {
         type: DataTypes.INTEGER,
         defaultValue: 0
+    },
+    year: {
+        type: DataTypes.INTEGER,
+        validate:{
+            isAfter: "1991-01-01",    // only allow date strings after a specific date
+            isBefore: DataTypes.NOW,
+              }
     }
    
   }, {
     sequelize,
     underscored: true,
-    timestamps: false,
+    timestamps: true,
     modelName: 'blog'
   })
 

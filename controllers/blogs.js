@@ -71,7 +71,28 @@ catch(error)
 next(error)
 }
 })
-  router.put('/:id',async(req,res,next)=>
+  router.put('/updateYear/:id',tokenAuthorisation,async(req,res,next)=>
+  {
+    const Id = req?.params?.id
+    console.log(Id)
+    try{
+    const blog = await Blog.findByPk(
+        Id
+    )
+    if(blog){
+    blog.year = req.body.year
+    await blog.save()
+    console.log(blog)
+    res.json(blog)
+    }
+    else next({errors:'Not found'})
+}
+catch(error)
+{
+    next(error)
+}
+  })
+  router.put('/:id',tokenAuthorisation,async(req,res,next)=>
   {
     const Id = req?.params?.id
     console.log(Id)
