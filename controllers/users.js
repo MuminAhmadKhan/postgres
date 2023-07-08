@@ -41,10 +41,47 @@ router.get('/', async (req,res,next)=>
         next(error)
     }
 })
+router.get('/:username',async(req,res,next)=>{
+    try{
+        console.log(req.query.read)
+        let user = await User.findOne({
+            where:{username:req.params.username},
+            include:{
+                model: Blog,
+                as: 'listed_blogs',
+                attributes: { exclude: ['userId']},
+                through: {
+                  attributes: ['read','id']
+                
+                },
+                // where:
+                // {read: {[Op.eq]:true}},
 
+            }
+        })
+
+        res.json(user)
+    }
+    catch(error)
+    {
+        console.log("error")
+        next(error)
+    }
+
+})
 router.put('/:username',async(req,res,next)=>{
     try{
-        let user = await User.findOne({where:{username:req.params.username}})
+        let user = await User.findOne({
+            where:{username:req.params.username},
+            include:{
+                model: Blog,
+                as: 'listed_blogs',
+                // attributes: { exclude: ['userId']},
+                through: {
+                  attributes: []
+                }
+            }
+        })
         user.username=req.body.username
         user = await user.save()
         res.json(user)

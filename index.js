@@ -5,6 +5,7 @@ const blogsRouter = require('./controllers/blogs')
 const userRouter = require('./controllers/users')
 const loginRouter = require('./controllers/login')
 const authorRouter = require('./controllers/authors')
+const readinglistRouter = require('./controllers/readinglists')
 
 const errorHandler = require('./utils/middleware/errorHandler')
 // console.log(blogsRouter.get)
@@ -15,6 +16,8 @@ app.use('/api/blogs',blogsRouter)
 app.use('/api/users',userRouter)
 app.use('/api/login',loginRouter)
 app.use('/api/authors',authorRouter)
+app.use('/api/readinglists',readinglistRouter)
+
 app.use(errorHandler)
 const start = async ()=>{
   await checkConnection()

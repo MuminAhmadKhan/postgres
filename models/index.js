@@ -1,8 +1,9 @@
 const  Blog = require('./blog')
 const  User = require('./user')
+const UserBlog = require('./user_blogs')
 User.hasMany(Blog)
 Blog.belongsTo(User)
-// Blog.sync({alter:true})
-// User.sync({alter:true})
 
-module.exports = {Blog, User}
+User.belongsToMany(Blog, {through :UserBlog, as: 'listed_blogs'})
+Blog.belongsToMany(User,{through: UserBlog, as:'intrested_users'})
+module.exports = {Blog, User, UserBlog}
