@@ -1,4 +1,5 @@
 const router = require('express').Router()
+const {Op} = require('sequelize')
 const { User, Blog } = require('../models')
 const bcrypt = require('bcryptjs')
 
@@ -51,8 +52,9 @@ router.get('/:username',async(req,res,next)=>{
                 as: 'listed_blogs',
                 attributes: { exclude: ['userId']},
                 through: {
-                  attributes: ['read','id']
-                
+                  attributes: ['read','id'],
+                  where:
+                {read: {[Op.eq]:req.query.read}}
                 },
                 // where:
                 // {read: {[Op.eq]:true}},
@@ -64,7 +66,7 @@ router.get('/:username',async(req,res,next)=>{
     }
     catch(error)
     {
-        console.log("error")
+        console.log("error",error)
         next(error)
     }
 
