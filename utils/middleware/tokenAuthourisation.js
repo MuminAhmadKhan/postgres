@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 const {SECRET} = require('../config')
-
-const tokenAuthorisation = (req,res,next)=>
+const {Session} = require('../../models')
+const tokenAuthorisation = async (req,res,next)=>
 {
     const auth = req.get('authorization')
     console.log("hl")
@@ -10,8 +10,14 @@ const tokenAuthorisation = (req,res,next)=>
         console.log("khlk")
         try {
             token = jwt.verify(auth.substring(7),SECRET)
-            req.decodedToken = token 
-            console.log(token)
+            const session = await Session.findOne({where:{userId:token.id, token:auth.substring(7)}})
+            console.log(session)
+            if(session)
+            {
+                req.decodedToken = token 
+                console.log(token)
+            }
+            else next({"errors":"Invalid Token"})
         }
         catch(error)
         {
