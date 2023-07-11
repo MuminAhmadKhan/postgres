@@ -6,7 +6,8 @@ const bcrypt = require('bcryptjs')
 router.post('/',async (req,res,next)=>
 {
     
-    try{
+    try
+    {
         const password = req.body.password
         const saltRounds = 10
         const passHash = await bcrypt.hash(password, saltRounds)
@@ -19,8 +20,8 @@ router.post('/',async (req,res,next)=>
     }
     catch(error)
     {
-        console.log(error)
-        next(error)    }
+        next(error)    
+    }
 
 })
 router.get('/', async (req,res,next)=>
@@ -44,7 +45,6 @@ router.get('/', async (req,res,next)=>
 })
 router.get('/:username',async(req,res,next)=>{
     try{
-        console.log(req.query.read)
         let user = await User.findOne({
             where:{username:req.params.username},
             include:{
@@ -56,8 +56,7 @@ router.get('/:username',async(req,res,next)=>{
                   where:
                 {read: {[Op.eq]:req.query.read}}
                 },
-                // where:
-                // {read: {[Op.eq]:true}},
+
 
             }
         })

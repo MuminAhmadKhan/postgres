@@ -5,7 +5,8 @@ const tokenAuthorisation = require('../utils/middleware/tokenAuthourisation')
 router.get('/', async (req,res,next)=>{
     
     try 
-    {   const where = {}
+    {   
+        const where = {}
         if(req.query.search )
         {
             where[Op.or] = [
@@ -40,7 +41,6 @@ router.get('/', async (req,res,next)=>{
 router.post('/', tokenAuthorisation, async(req,res,next)=>
   {
     try {
-        console.log('jgkj')
         const user = await User.findByPk(req.decodedToken.id)
         const blog = await Blog.create({...req.body,userId : user.id})
         res.json(blog)
@@ -92,10 +92,9 @@ catch(error)
     next(error)
 }
   })
-  router.put('/:id',tokenAuthorisation,async(req,res,next)=>
+  router.put('/:id', tokenAuthorisation, async(req,res,next)=>
   {
     const Id = req?.params?.id
-    console.log(Id)
     try{
     const blog = await Blog.findByPk(
         Id

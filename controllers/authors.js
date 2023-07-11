@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const { Blog, User } = require('../models')
-const {Op} = require('sequelize')
+
 const {sequelize} = require('../utils/db') 
 router.get('/',async (req,res,next)=>{
     try{
@@ -11,11 +11,7 @@ router.get('/',async (req,res,next)=>{
         [sequelize.fn('COUNT', sequelize.col('title')), 'articles']
 
     ],
-        // include:{
-        //     model: User,
-        //     attributes: ['name'],
-            
-        // },
+
         group:['author'],
         order: [
             ['totalLikes', 'DESC'],

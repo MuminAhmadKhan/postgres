@@ -4,7 +4,8 @@ const {Session} = require('../models')
 const tokenAuthorisation = require('../utils/middleware/tokenAuthourisation')
 router.delete('/', tokenAuthorisation, async(req,res,next)=>
 {
-    try{
+    try
+    {
     const deletedSession = await Session.destroy({
     where:{
         userId: req.decodedToken.id,
